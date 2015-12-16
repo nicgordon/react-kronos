@@ -44,7 +44,12 @@ class Calendar extends Component {
   onCellClick(datetime) {
     const lvl = Levels[this.props.level]
     if (lvl.down) this.props.setLevel(lvl.down)
-    this.props.onSelect(datetime, !lvl.down, lvl.key)
+    
+    if ([Units.DAY, Units.HOUR].indexOf(this.props.level) >= 0) {
+      this.props.onSelect(datetime, !lvl.down, lvl.key)
+    } else {
+      this.props.onNavigate(datetime)
+    }
   }
 
   onNavigateUp() {
