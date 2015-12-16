@@ -251,7 +251,7 @@ class Calendar extends Component {
                   moment={cell.moment}
                   onClick={::this.onCellClick}
                   classes={classes}
-                  invalid={this.props.validate(cell.moment, level)}
+                  valid={this.props.validate(cell.moment, level)}
                 />
               )
             })

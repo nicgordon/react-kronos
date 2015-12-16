@@ -11,6 +11,7 @@ export default class Cell extends Component {
     today: PropTypes.bool,
     onClick: PropTypes.func,
     classes: PropTypes.object,
+    valid: PropTypes.bool,
   }
 
   render() {
@@ -20,7 +21,7 @@ export default class Cell extends Component {
       this.props.type,
       { selected: this.props.selected },
       { today: this.props.today },
-      { 'outside-range': !this.props.invalid },
+      { 'outside-range': !this.props.valid },
     )
 
     return (
