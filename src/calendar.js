@@ -15,12 +15,14 @@ import getStyle from './styles'
 class Calendar extends Component {
 
   static PropTypes = {
-    datetime: PropTypes.object.isRequired,
+    datetimeInView: PropTypes.object.isRequired,
+    datetimeSelected: PropTypes.object.isRequired,
     onSelect: PropTypes.func.isRequired,
     level: PropTypes.string.isRequired,
     setLevel: PropTypes.func.isRequired,
     onMouseDown: PropTypes.func,
     onMouseUp: PropTypes.func,
+    onNavigate: PropTypes.func,
   }
 
   componentDidMount() {
@@ -50,13 +52,15 @@ class Calendar extends Component {
   }
 
   onNavigateLeft() {
-    const lvl = Levels[this.props.level].nav
-    this.props.onSelect(this.props.datetime.subtract(lvl.span, lvl.unit))
+    const { datetimeInView, level, onNavigate } = this.props
+    const lvl = Levels[level].nav
+    onNavigate && onNavigate(datetimeInView.subtract(lvl.span, lvl.unit))
   }
 
   onNavigateRight() {
-    const lvl = Levels[this.props.level].nav
-    this.props.onSelect(this.props.datetime.add(lvl.span, lvl.unit))
+    const { datetimeInView, level, onNavigate } = this.props
+    const lvl = Levels[level].nav
+    onNavigate && onNavigate(datetimeInView.add(lvl.span, lvl.unit))
   }
 
   onToday() {
@@ -99,8 +103,9 @@ class Calendar extends Component {
 
   }
 
-  getCells(unit, datetime) {
-    datetime = datetime || Moment()
+  getCells(unit, datetimeInView, datetimeSelected) {
+    const datetime = datetimeInView || Moment()
+
     switch (unit) {
       case 'years': {
         const start = datetime.clone().subtract(4, 'years')
@@ -157,9 +162,9 @@ class Calendar extends Component {
             days.push({
               moment: day,
               label: day.format('D'),
-              past: day.isBefore(datetime, 'month'),
-              future: day.isAfter(datetime, 'month'),
-              selected: day.isSame(datetime, 'day'),
+              past: day.isBefore(datetimeSelected, 'month'),
+              future: day.isAfter(datetimeSelected, 'month'),
+              selected: day.isSame(datetimeSelected, 'day'),
               today: day.isSame(Moment(), 'day'),
             })
           })
@@ -201,7 +206,7 @@ class Calendar extends Component {
   }
 
   render() {
-    const { level, datetime, classes } = this.props
+    const { classes, datetimeInView, datetimeSelected, level } = this.props
 
     return (
       <div
@@ -215,10 +220,10 @@ class Calendar extends Component {
             onPrev={::this.onNavigateLeft}
             onNext={::this.onNavigateRight}
             onTitle={::this.onNavigateUp}
-            title={this.getTitle(level, datetime)}
+            title={this.getTitle(level, datetimeInView)}
           /> }
         <div ref='grid' className={cn(classes.grid, level)}>
-          { this.getCells(level, datetime).map( (cell, i) => {
+          { this.getCells(level, datetimeInView, datetimeSelected).map( (cell, i) => {
               let type
               switch (true) {
                 case cell.header:

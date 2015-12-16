@@ -24,7 +24,8 @@ class Kronos extends Component {
     super(props)
 
     this.state = {
-      datetime: this.getDateTimeInput().datetime,
+      datetimeSelected: this.getDateTimeInput().datetime,
+      datetimeInView: this.getDateTimeInput().datetime,
       input: this.getDateTimeInput().input,
       type: this.getDateTimeInput().type,
       visible: false,
@@ -67,7 +68,8 @@ class Kronos extends Component {
     if (this.props != nextProps) {
       this.validate(this.getDateTimeInput(nextProps).datetime, null, true)
       this.setState({
-        datetime: this.getDateTimeInput(nextProps).datetime,
+        datetimeSelected: this.getDateTimeInput(nextProps).datetime,
+        datetimeInView: this.getDateTimeInput(nextProps).datetime,
         input: this.getDateTimeInput(nextProps).input,
       })
     }
@@ -158,7 +160,7 @@ class Kronos extends Component {
     if (!parsing.isValid()) {
       let test = new Date(input)
       if (isNaN(test.getTime())) {
-        test = this.state && this.state.datetime || Moment()
+        test = this.state && this.state.datetimeSelected || Moment()
       }
 
       parsing = Moment(test)
@@ -168,18 +170,18 @@ class Kronos extends Component {
   }
 
   save(saving) {
-    const { datetime } = this.state
+    const { datetimeSelected } = this.state
     if (this.props.date) {
-      saving.hours(datetime.hours())
-      saving.minutes(datetime.minutes())
+      saving.hours(datetimeSelected.hours())
+      saving.minutes(datetimeSelected.minutes())
     }
     if (this.props.time) {
-      saving.date(datetime.date())
-      saving.month(datetime.month())
-      saving.year(datetime.year())
+      saving.date(datetimeSelected.date())
+      saving.month(datetimeSelected.month())
+      saving.year(datetimeSelected.year())
     }
     this.setState({
-      datetime: saving,
+      datetimeSelected: saving,
       input: saving.format(this.format()),
     })
 
@@ -270,13 +272,20 @@ class Kronos extends Component {
   }
 
   onBlur() {
+  onNavigate(datetime) {
+    this.setState({
+      datetimeInView: datetime
+    })
+  }
+
     if (this.above) {
       ReactDOM.findDOMNode(this.refs.input).focus()
     }
     else if (this.props.closeOnBlur) {
       this.toggle(false)
     }
-    if (this.state.input == this.state.datetime.format(this.format())) {
+
+    if (this.state.input == this.state.datetimeSelected.format(this.format())) {
       return
     }
     else {
@@ -286,7 +295,7 @@ class Kronos extends Component {
   }
 
   onKeyDown(code) {
-    let datetime = this.state.datetime || Moment()
+    let datetime = this.state.datetimeSelected || Moment()
     let lvl = Levels[this.state.level]
 
     switch (code) {
@@ -345,8 +354,10 @@ class Kronos extends Component {
       { this.state.visible &&
           <Calendar
             id={this.props.id}
-            datetime={this.state.datetime}
+            datetimeInView={this.state.datetimeInView}
+            datetimeSelected={this.state.datetimeSelected}
             onSelect={::this.onSelect}
+            onNavigate={::this.onNavigate}
             above={(bool) => this.above = bool}
             level={this.state.level}
             setLevel={(level) => this.setState({ level }) }
