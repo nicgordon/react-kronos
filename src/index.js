@@ -289,7 +289,7 @@ class Kronos extends Component {
       return
     }
     else {
-      datetime = this.parse(this.state.input)
+      const datetime = this.parse(this.state.input)
       if (datetime) this.save(datetime)
     }
   }
