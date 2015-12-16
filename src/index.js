@@ -244,11 +244,12 @@ class Kronos extends Component {
         datetime: null,
         input: '',
       })
-      this.props.onChange && this.props.onChange(null)
     }
     else {
       this.setState({ input })
     }
+
+    this.props.onChange && this.props.onChange(input)
   }
 
   onSelect(datetime, close, timeUnit) {
@@ -271,13 +272,13 @@ class Kronos extends Component {
     this.save(datetime)
   }
 
-  onBlur() {
   onNavigate(datetime) {
     this.setState({
       datetimeInView: datetime
     })
   }
 
+  onBlur(e) {
     if (this.above) {
       ReactDOM.findDOMNode(this.refs.input).focus()
     }
@@ -292,6 +293,20 @@ class Kronos extends Component {
       const datetime = this.parse(this.state.input)
       if (datetime) this.save(datetime)
     }
+
+    this.props.onBlur && this.props.onBlur(e)
+  }
+
+  onFocus(e) {
+    this.toggle(true)
+
+    this.props.onFocus && this.props.onFocus(e)
+  }
+
+  onClick(e) {
+    this.toggle(true)
+
+    this.props.onClick && this.props.onClick(e)
   }
 
   onKeyDown(code) {
@@ -343,8 +358,8 @@ class Kronos extends Component {
           type='text'
           ref='input'
           value={this.state.input}
-          onClick={() => this.toggle(true)}
-          onFocus={() => this.toggle(true)}
+          onClick={::this.onClick}
+          onFocus={::this.onFocus}
           onBlur={::this.onBlur}
           onKeyDown={(e) => this.onKeyDown(e.keyCode)}
           onChange={::this.onChange}
