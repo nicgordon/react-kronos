@@ -40,7 +40,7 @@ class Calendar extends Component {
     }
   }
 
-  onNavigateCell(datetime) {
+  onCellClick(datetime) {
     const lvl = Levels[this.props.level]
     if (lvl.down) this.props.setLevel(lvl.down)
     this.props.onSelect(datetime, !lvl.down, lvl.key)
@@ -249,7 +249,7 @@ class Calendar extends Component {
                   selected={cell.selected}
                   today={cell.today}
                   moment={cell.moment}
-                  onClick={::this.onNavigateCell}
+                  onClick={::this.onCellClick}
                   classes={classes}
                   invalid={this.props.validate(cell.moment, level)}
                 />
