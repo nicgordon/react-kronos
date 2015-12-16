@@ -20,7 +20,7 @@ export default class Cell extends Component {
   onClick() {
     const { level, moment, preventClickOnDateTimeOutsideRange, valid } = this.props
 
-    if (!(preventClickOnDateTimeOutsideRange && !valid && level === Units.DAY)) {
+    if (!(preventClickOnDateTimeOutsideRange && !valid && [Units.DAY, Units.HOUR].indexOf(level) >= 0)) {
       this.props.onClick(moment)
     }
   }
