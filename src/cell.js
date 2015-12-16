@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 
+import { Units } from './constants'
+
 export default class Cell extends Component {
 
   static propTypes = {
@@ -11,7 +13,16 @@ export default class Cell extends Component {
     today: PropTypes.bool,
     onClick: PropTypes.func,
     classes: PropTypes.object,
+    preventClickOnDateTimeOutsideRange: PropTypes.bool,
     valid: PropTypes.bool,
+  }
+
+  onClick() {
+    const { level, moment, preventClickOnDateTimeOutsideRange, valid } = this.props
+
+    if (!(preventClickOnDateTimeOutsideRange && !valid && level === Units.DAY)) {
+      this.props.onClick(moment)
+    }
   }
 
   render() {
@@ -27,7 +38,7 @@ export default class Cell extends Component {
     return (
       <div
         className={classes}
-        onClick={() => this.props.onClick(this.props.moment)}
+        onClick={::this.onClick}
       >
         {this.props.label}
       </div>

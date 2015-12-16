@@ -377,6 +377,7 @@ class Kronos extends Component {
             level={this.state.level}
             setLevel={(level) => this.setState({ level }) }
             validate={::this.validate}
+            preventClickOnDateTimeOutsideRange={this.props.preventClickOnDateTimeOutsideRange}
           />
         }
       </div>

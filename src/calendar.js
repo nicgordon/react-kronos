@@ -23,6 +23,7 @@ class Calendar extends Component {
     onMouseDown: PropTypes.func,
     onMouseUp: PropTypes.func,
     onNavigate: PropTypes.func,
+    preventClickOnDateTimeOutsideRange: PropTypes.bool,
   }
 
   componentDidMount() {
@@ -252,6 +253,7 @@ class Calendar extends Component {
                   onClick={::this.onCellClick}
                   classes={classes}
                   valid={this.props.validate(cell.moment, level)}
+                  preventClickOnDateTimeOutsideRange={this.props.preventClickOnDateTimeOutsideRange}
                 />
               )
             })
